@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Get Well Soon! 💛💙</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #87CEEB;
+            --secondary: #FFD700;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f7ff 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #333;
+            position: relative;
+            touch-action: manipulation;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: fadeInDown 1s ease-out;
+        }
+        
+        /* Battle Animation Styles */
+        .battle-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            min-height: 200px;
+        }
+        
+        .character-container, .enemy-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            width: 160px;
+        }
+        
+        .character {
+            font-size: 4rem;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            margin: 8px 0;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            transform-origin: bottom center;
+        }
+        
+        .character:hover {
+            transform: scale(1.1);
+        }
+        
+        .character.attacking {
+            animation: characterAttack 0.5s ease-out;
+        }
+        
+        .enemy {
+            font-size: 4rem;
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .enemy.hurt {
+            animation: enemyHurt 0.5s ease-out;
+        }
+        
+        .enemy.defeated {
+            animation: enemyDefeated 1s forwards;
+        }
+        
+        .vs {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            background: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 50%;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            margin: 0 0.5rem;
+        }
+        
+        .health-bar {
+            width: 130px;
+            height: 16px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 8px 0;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+        
+        .health-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s ease;
+        }
+        
+        .enemy .health-fill {
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+        }
+        
+        .message {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem auto;
+            max-width: 500px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .message::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .get-well-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 280px;
+        }
+        
+        .get-well-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+        
+        .floating {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .shape1 { top: 10%; left: 5%; width: 80px; height: 80px; background: var(--primary); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation-delay: 0s; }
+        .shape2 { top: 60%; left: 8%; width: 120px; height: 120px; background: var(--secondary); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation-delay: -5s; }
+        .shape3 { top: 20%; right: 5%; width: 100px; height: 100px; background: var(--secondary); border-radius: 50%; animation-delay: -8s; }
+        .shape4 { bottom: 10%; right: 8%; width: 60px; height: 60px; background: var(--primary); border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%; animation-delay: -12s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        
+        @keyframes characterAttack {
+            0% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(30px) scale(1.2); }
+            100% { transform: translateX(0) scale(1); }
+        }
+        
+        @keyframes enemyHurt {
+            0%, 100% { transform: translateX(0) scale(1); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            50% { transform: translateX(10px) rotate(5deg); }
+            75% { transform: translateX(-5px) rotate(-2deg); }
+        }
+        
+        @keyframes enemyDefeated {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .attack-effect {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 10;
+            animation: attackEffect 1s forwards;
+        }
+        
+        @keyframes attackEffect {
+            0% { 
+                transform: translate(-50%, -50%) scale(0.5); 
+                opacity: 0; 
+            }
+            50% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(0.8); 
+                opacity: 0; 
+            }
+        }
+        
+        .victory-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        .victory-message.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .victory-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 80%;
+            transform: scale(0.8);
+            transition: transform 0.5s ease;
+        }
+        
+        .victory-message.show .victory-content {
+            transform: scale(1);
+        }
+        
+        .victory-content h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .victory-content p {
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .battle-animation {
+                gap: 1rem;
+                min-height: 150px;
+            }
+            
+            .character, .enemy {
+                font-size: 3.5rem !important;
+            }
+            
+            .vs {
+                font-size: 1.3rem;
+                padding: 0.3rem 0.7rem;
+                margin: 0 0.3rem;
+            }
+            
+            .health-bar {
+                width: 110px !important;
+                height: 14px !important;
+            }
+            
+            .character-container, .enemy-container {
+                width: 140px !important;
+            }
+            
+            .get-well-btn {
+                background: linear-gradient(45deg, #87CEEB, #5F9EA0);
+                color: white;
+                border: none;
+                padding: 12px 30px;
+                font-size: 1.1rem;
+                border-radius: 50px;
+                cursor: pointer;
+                margin-top: 1rem;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .get-well-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            }
+            
+            @keyframes characterAttack {
+                0% { transform: translateX(0) scale(1); }
+                50% { transform: translateX(20px) scale(1.1); }
+                100% { transform: translateX(0) scale(1); }
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .battle-animation {
+                flex-direction: column;
+                gap: 0.5rem;
+                min-height: auto;
+            }
+            
+            .vs {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+            
+            .character, .enemy {
+                font-size: 3rem !important;
+            }
+            
+            .health-bar {
+                width: 100px !important;
+                height: 12px !important;
+            }
+            
+            .character-container, .enemy-container {
+                width: 120px !important;
+            }
+            
+            .floating {
+                display: none;
+            }
+            
+            .shape1, .shape2, .shape3, .shape4 {
+                display: none;
+            }
+            
+            .victory-content {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+            
+            .victory-content h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating shape1"></div>
+    <div class="floating shape2"></div>
+    <div class="floating shape3"></div>
+    <div class="floating shape4"></div>
+    
+    <div class="container">
+        <h1>Get Well Soon! <span class="healing-emoji">💛</span></h1>
+        
+        <div class="battle-animation">
+            <div class="character-container">
+                <div class="health-bar"><div class="health-fill" id="playerHealth"></div></div>
+                <div class="character" id="character">👧</div>
+                <div>You</div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="enemy-container">
+                <div class="health-bar"><div class="health-fill" id="enemyHealth" style="width: 100%;"></div></div>
+                <div class="enemy" id="enemy">🦠</div>
+                <div>Hepatitis</div>
+            </div>
+        </div>
+        
+        <div class="message">
+            <p>Click on Ishita to attack the bacteria!</p>
+            <button class="get-well-btn" id="sendHug">Sending you a virtual hug 🤗</button>
+        </div>
+    </div>
+    
+    <div class="victory-message" id="victoryMessage">
+        <div class="victory-content">
+            <h2>Victory! 🎉</h2>
+            <p>You've defeated the bacteria! Stay strong and keep fighting!</p>
+            <button class="get-well-btn" id="playAgain">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let enemyHealth = 100;
+        let isAttacking = false;
+        const enemy = document.getElementById('enemy');
+        const character = document.getElementById('character');
+        const enemyHealthBar = document.getElementById('enemyHealth');
+        const victoryMessage = document.getElementById('victoryMessage');
+        
+        // Attack function
+        function attack() {
+            if (isAttacking) return;
+            
+            isAttacking = true;
+            
+            // Character attack animation
+            character.classList.add('attacking');
+            
+            // Create attack effect
+            const attackEffect = document.createElement('div');
+            attackEffect.className = 'attack-effect';
+            attackEffect.innerHTML = '💥';
+            attackEffect.style.left = '50%';
+            attackEffect.style.top = '50%';
+            document.querySelector('.battle-animation').appendChild(attackEffect);
+            
+            // Damage enemy after a short delay
+            setTimeout(() => {
+                // Enemy hurt animation
+                enemy.classList.add('hurt');
+                
+                // Reduce health
+                enemyHealth -= Math.floor(Math.random() * 20) + 10;
+                if (enemyHealth < 0) enemyHealth = 0;
+                
+                // Update health bar
+                enemyHealthBar.style.width = enemyHealth + '%';
+                
+                // Check if enemy is defeated
+                if (enemyHealth <= 0) {
+                    enemy.classList.add('defeated');
+                    enemy.classList.remove('hurt');
+                    setTimeout(showVictory, 1000);
+                }
+                
+                // Remove hurt class after animation
+                setTimeout(() => {
+                    enemy.classList.remove('hurt');
+                }, 500);
+                
+                // Remove attack effect
+                setTimeout(() => {
+                    attackEffect.remove();
+                }, 1000);
+                
+                // Reset attack state
+                setTimeout(() => {
+                    character.classList.remove('attacking');
+                    isAttacking = false;
+                }, 300);
+            }, 200);
+        }
+        
+        // Show victory message
+        function showVictory() {
+            victoryMessage.classList.add('show');
+        }
+        
+        // Reset game
+        function resetGame() {
+            enemyHealth = 100;
+            enemyHealthBar.style.width = '100%';
+            enemy.className = 'enemy';
+            victoryMessage.classList.remove('show');
+        }
+        
+        // Event listeners
+        character.addEventListener('click', attack);
+        character.addEventListener('touchstart', attack, { passive: true });
+        document.getElementById('sendHug').addEventListener('click', () => {
+            alert('🤗 Sending you lots of strength! Keep fighting! 💪');
+        });
+        document.getElementById('playAgain').addEventListener('click', resetGame);
+        
+        // Auto-attack every 3 seconds if no interaction
+        setInterval(() => {
+            if (!isAttacking && enemyHealth > 0) {
+                attack();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
